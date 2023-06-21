@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect
-from models import Products, Category
+from .models import Products, Category
 from django.views import View
 
 
