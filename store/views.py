@@ -48,4 +48,4 @@ def store(request):
     data = {'products': products, 'categories': categories}
 
     print('you are: ', request.session.get('email'))
-    return render(request, 'index.html', data)
+    return render(request, '../templates/index.html', data)
