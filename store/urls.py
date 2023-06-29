@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from .views import Index, Login, Signup, Cart, CheckOut, OrderView, logout, store
 from .middlewares.auth import auth_middleware
 
