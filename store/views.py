@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.contrib.auth.hashers import check_password, make_password
-from .models import Products, Category, Customer
+from .models import Products, Category, Customer, Order
 from django.views import View
+from store.middlewares.auth import auth_middleware
 
 
 # Create your views here.
@@ -125,6 +126,42 @@ class Signup(View):
 
         # save
         return error_message
+
+
+class Cart(View):
+    def get(self, request):
+        ids = list(request.session.get('cart').keys())
+        products = Products.get_products_by_id(ids)
+        print(products)
+        return render(request, '../templates/cart.html', {'products': products})
+
+
+class CheckOut(View):
+    def post(self, request):
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+        customer = request.session.get('customer')
+        cart = request.session.get('cart')
+        products = Products.get_products_by_id(list(cart.keys()))
+        print(address, phone, customer, cart, products)
+
+        for product in products:
+            print(cart.get(str(product.id)))
+            order = Order(customer=Customer(id=customer),
+                          product=product, price=product.price,
+                          address=address, phone=phone,
+                          quantity=cart.get(str(product.id)))
+            order.save()
+        request.session['cart'] = {}
+        return redirect('cart')
+
+
+class OrderView(View):
+    def get(self, request):
+        customer = request.session.get('customer')
+        orders = Order.get_orders_by_customer(customer)
+        print(orders)
+        return render(request, '../templates/orders.html', {'orders': orders})
 
 
 def store(request):

@@ -1,5 +1,6 @@
 from django.urls import path, include
-from .views import Index, Login, Signup, logout, store
+from .views import Index, Login, Signup, Cart, CheckOut, OrderView, logout, store
+from .middlewares.auth import auth_middleware
 
 urlpatterns = [
     path('', Index.as_view(), name='homepage'),
@@ -7,4 +8,7 @@ urlpatterns = [
     path('signup', Signup.as_view(), name='signup'),
     path('login', Login.as_view(), name='login'),
     path('logout', logout, name='logout'),
+    path('cart', auth_middleware(Cart.as_view()), name='cart'),
+    path('check-out', CheckOut.as_view(), name='checkout'),
+    path('orders', auth_middleware(OrderView.as_view()), name='orders'),
 ]
