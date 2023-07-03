@@ -27,7 +27,7 @@ class Customer(models.Model):
     @staticmethod
     def get_customer_by_email(email):
         try:
-            return Customer.objects.get(email=self.email)
+            return Customer.objects.get(email=email)
         except:
             return False
 

@@ -40,15 +40,18 @@ class Login(View):
 
     def get(self, request):
         Login.return_url = request.GET.get('return_url')
-        return render(request, 'login.html')
+        return render(request, '../templates/login.html')
 
     def post(self, request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         customer = Customer.get_customer_by_email(email)
         error_message = None
+        print(email, password)
+        print(customer)
         if customer:
             flag = check_password(password, customer.password)
+            # print(flag)
             if flag:
                 request.session['customer'] = customer.id
 
@@ -113,7 +116,7 @@ class Signup(View):
             error_message = 'Please enter your last name'
         elif len(customer.last_name) < 3:
             error_message = 'Last name must be more than 3 characters long!'
-        elif customer.phone:
+        elif not customer.phone:
             error_message = 'Enter your phone number!'
         elif len(customer.phone) < 10:
             error_message = 'Phone number must be 10 characters long!!'
